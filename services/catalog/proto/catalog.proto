@@ -25,6 +25,12 @@ service CatalogService {
       get: "/catalog/items"
     };
   }
+
+  rpc ListMyItems(ListMyItemsRequest) returns (ListMyItemsResponse){
+    option (google.api.http) = {
+      get: "/catalog/items/mine"
+    };
+  }
 }
 
 message CreateItemRequest {
@@ -44,9 +50,7 @@ message GetItemResponse {
   Item item = 1;
 }
 
-message ListItemsRequest {
-  string id = 1;
-}
+message ListItemsRequest {}
 
 message ListItemsResponse {
   repeated Item items = 1;
@@ -58,4 +62,10 @@ message Item {
   string customer_name = 3;
   string title = 4;
   int64 price = 5;
+}
+
+message ListMyItemsRequest {}
+
+message ListMyItemsResponse {
+  repeated Item items = 1;
 }

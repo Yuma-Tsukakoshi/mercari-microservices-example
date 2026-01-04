@@ -7,7 +7,7 @@ KIND_VERSION               := 0.20.0
 INGRESS_NGINX_VERSION      := 1.8.1
 BUF_VERSION                := 1.8.0
 PROTOC_GEN_GO_VERSION      := 1.28.1
-PROTOC_GEN_GO_GRPC_VERSION := 1.2.0
+PROTOC_GEN_GO_GRPC_VERSION := 1.6.0
 
 BIN_DIR := $(shell pwd)/bin
 
@@ -54,7 +54,7 @@ $(PROTOC_GEN_GO):
 
 protoc-gen-go-grpc: $(PROTOC_GEN_GO_GRPC)
 $(PROTOC_GEN_GO_GRPC):
-	curl -sSL https://github.com/grpc/grpc-go/releases/download/cmd%2Fprotoc-gen-go-grpc%2Fv$(PROTOC_GEN_GO_GRPC_VERSION)/protoc-gen-go-grpc.v$(PROTOC_GEN_GO_GRPC_VERSION).$(OS).$(ARCH).tar.gz | tar -C $(BIN_DIR) -xzv ./protoc-gen-go-grpc
+	curl -fsSL https://github.com/grpc/grpc-go/releases/download/cmd/protoc-gen-go-grpc/v$(PROTOC_GEN_GO_GRPC_VERSION)/protoc-gen-go-grpc.v$(PROTOC_GEN_GO_GRPC_VERSION).$(OS).$(ARCH).tar.gz | tar -C $(BIN_DIR) -xzv ./protoc-gen-go-grpc
 
 protoc-gen-grpc-gateway: $(PROTOC_GEN_GRPC_GATEWAY)
 $(PROTOC_GEN_GRPC_GATEWAY):

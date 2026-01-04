@@ -116,3 +116,40 @@ func (s *server) ListItems(ctx context.Context, req *proto.ListItemsRequest) (*p
 
 	return res, nil
 }
+
+func (s *server) ListMyItems(ctx context.Context, req *proto.ListMyItemsRequest) (*proto.ListMyItemsResponse, error) {
+	tokenStr, err := auth.AuthFromMD(ctx, "bearer")
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "token not found")
+	}
+
+	token, err := jwt.Parse(bytes.NewBufferString(tokenStr).Bytes())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "failed to parse access token")
+	}
+
+	sub := token.Subject()
+
+	result, err := s.itemClient.ListItems(ctx, &item.ListItemsRequest{})
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to list items")
+	}
+
+	res := &proto.ListMyItemsResponse{
+		Items: make([]*proto.Item, 0, len(result.GetItems())),
+	}
+
+	for _, it := range result.GetItems() {
+		if it.GetCustomerId() != sub {
+			continue
+		}
+		res.Items = append(res.Items, &proto.Item{
+			Id:         it.GetId(),
+			CustomerId: it.GetCustomerId(),
+			Title:      it.GetTitle(),
+			Price:      it.GetPrice(),
+		})
+	}
+
+	return res, nil
+}
